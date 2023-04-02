@@ -5,6 +5,10 @@ fragments if necessary. Useful to adjust automatic speech recognition outputs fr
 
 This library works for all languages where spaces separate words.
 
+## Installing
+
+`pip install srt_equalizer`
+
 ## Example
 
 If the SRT file contains lines over a certain length like this:
@@ -54,7 +58,7 @@ difficult issue, an issue that is one of
 the most profound of our time.
 ```
 
-## Adjust Whsiper subtitle lengths
+## Adjust Whisper subtitle lengths
 Is is also possible to work with the subtitle items with the following utility methods:
 
 ```python
