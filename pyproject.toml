@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "srt_equalizer"
-version = "0.1.1"
+version = "0.1.2"
 description = "Transform subtitle line lengths, splitting into multiple subtitle fragments if necessary. "
 authors = ["Peter Krantz"]
 license = "MIT"
@@ -8,7 +8,7 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
-srt = "3.5.3"
+srt = "^3.5.3"
 
 [tool.poetry.dev-dependencies]
 
