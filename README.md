@@ -22,7 +22,8 @@ so I can discuss with you a complex and difficult issue, an issue that is one of
 Using this code to shorten the subtitles to a maximum length of 42 chars:
 
 ```python
-import srt_equalizer
+
+from srt_equalizer import srt_equalizer
 
 srt_equalizer.equalize_srt_file("test.srt", "shortened.srt", 42)
 ```
@@ -37,7 +38,7 @@ slot for the fragment.
 Good evening. I appreciate you giving me
 
 2
-00:00:02,132 --> 00:00:03,944
+00:00:02,132 --> 00:00:04,000
 a few minutes of your time tonight
 
 3
@@ -49,7 +50,7 @@ so I can discuss with you a complex and
 difficult issue, an issue that is one of
 
 5
-00:00:08,979 --> 00:00:10,870
+00:00:08,979 --> 00:00:11,000
 the most profound of our time.
 ```
 
@@ -60,3 +61,9 @@ split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: int=1)
 
 whisper_result_to_srt(segments: list[dict]) -> list[srt.Subtitle]:
 ```
+
+## Contributing
+
+This library is build with [Poetry](https://python-poetry.org). Checkout this repo and run `poetry install` in the source folder. To run tests use `poetry run pytest tests`.
+
+If you want to explore the library start a `poetry shell`.

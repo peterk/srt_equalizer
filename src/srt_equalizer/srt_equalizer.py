@@ -1,9 +1,8 @@
 from datetime import timedelta
 import srt
-import sys
 
 
-def load_srt(filepath: str):
+def load_srt(filepath: str) -> list[srt.Subtitle]:
     """Load an SRT subtitle file and return an array of srt.Subtitle items."""
     filedata = ""
     with open(filepath, 'r') as f:
@@ -27,13 +26,13 @@ def whisper_result_to_srt(segments: list[dict]) -> list[srt.Subtitle]:
         end_time = timedelta(seconds=int(segment['end']))
         content = segment['text']
         subs.append(srt.Subtitle(index=i, content=content, start=start_time, end=end_time))
-    
+
     return subs
 
 
-def split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: int=1) -> list[srt.Subtitle]:
+def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: int = 1) -> list[srt.Subtitle]:
     """If the subtitle length is > target_chars, split it into a list of subtitles within the same
-    time span. Otherwise return the subtitle as is. The time code is adjusted proportionally
+    time span. If not, return the subtitle as is. The time code is adjusted proportionally
     to the length of the subtitle.
     
     Args:
@@ -49,7 +48,7 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: in
         # keep this item as is, only adjust the start index if necessary.
         sub.index = start_from_index + 1
         return [sub]
-    
+
     text_chunks = []
     current_chunk = ""
     words = sub.content.split()
@@ -67,18 +66,23 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: in
     split_subs = []
     total_length = len(sub.content)
     current_time = sub.start
+
     for i, chunk in enumerate(text_chunks):
         chunk_length = len(chunk)
         chunk_duration = chunk_length / total_length * (sub.end - sub.start)
         start_time = current_time
 
-        # prevent overlap errors in subtitle editing software
-        end_time = current_time + chunk_duration - timedelta(milliseconds=1)
-        
+        # set end time to original sub item end time if this is the last chunk.
+        if i == len(text_chunks) - 1:
+            end_time = sub.end
+            print("hej")
+        else:
+            end_time = current_time + chunk_duration
+
         new_subtitle = srt.Subtitle(
             index=start_from_index + i,
             start=start_time,
-            end=end_time, 
+            end=end_time,
             content=chunk
         )
         split_subs.append(new_subtitle)
@@ -104,12 +108,3 @@ def equalize_srt_file(srt_path: str, output_srt_path: str, target_chars: int):
 
     # Write the result to a new file
     write_srt(filepath=output_srt_path, subs=adjusted_subs)
-
-
-
-if __name__ == '__main__':
-
-    adjusted_subs = []
-    last_index = 1
-
-    equalize_srt_file(srt_path="gwb_journo.srt", output_srt_path="gwb42.srt", target_chars=74)
