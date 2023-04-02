@@ -75,7 +75,6 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: 
         # set end time to original sub item end time if this is the last chunk.
         if i == len(text_chunks) - 1:
             end_time = sub.end
-            print("hej")
         else:
             end_time = current_time + chunk_duration
 

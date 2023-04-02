@@ -54,12 +54,36 @@ difficult issue, an issue that is one of
 the most profound of our time.
 ```
 
+## Adjust Whsiper subtitle lengths
 Is is also possible to work with the subtitle items with the following utility methods:
 
 ```python
 split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: int=1) -> list[srt.Subtitle]:
 
 whisper_result_to_srt(segments: list[dict]) -> list[srt.Subtitle]:
+```
+
+Here is an example of how to reduce the lingth of subtitles created by Whisper. It assumes you have an audio file to transcribe called gwb.wav.
+
+```python
+import whisper
+from srt_equalizer import srt_equalizer
+import srt
+from datetime import timedelta
+
+options_dict = {"task" : "transcribe", "language": "en"}
+model = whisper.load_model("small")
+result = model.transcribe("gwb.wav", language="en")
+segments = result["segments"]
+subs = srt_equalizer.whisper_result_to_srt(segments)
+
+# Reduce line lenth in the whisper result to <= 42 chars
+equalized = []
+for sub in subs:
+    equalized.extend(srt_equalizer.split_subtitle(sub, 42))
+
+for i in equalized:
+    print(i.content)
 ```
 
 ## Contributing
