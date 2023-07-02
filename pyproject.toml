@@ -5,6 +5,7 @@ description = "Transform subtitle line lengths, splitting into multiple subtitle
 authors = ["Peter Krantz"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/peterk/srt_equalizer"
 
 [tool.poetry.dependencies]
 python = "^3.9"
