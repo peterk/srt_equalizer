@@ -92,6 +92,6 @@ for i in equalized:
 
 ## Contributing
 
-This library is build with [Poetry](https://python-poetry.org). Checkout this repo and run `poetry install` in the source folder. To run tests use `poetry run pytest tests`.
+This library is built with [Poetry](https://python-poetry.org). Checkout this repo and run `poetry install` in the source folder. To run tests use `poetry run pytest tests`.
 
 If you want to explore the library start a `poetry shell`.
