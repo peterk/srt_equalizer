@@ -1,8 +1,8 @@
 from datetime import timedelta
 import srt
+from typing import List
 
-
-def load_srt(filepath: str) -> list[srt.Subtitle]:
+def load_srt(filepath: str) -> List[srt.Subtitle]:
     """Load an SRT subtitle file and return an array of srt.Subtitle items."""
     filedata = ""
     with open(filepath, 'r') as f:
@@ -11,13 +11,13 @@ def load_srt(filepath: str) -> list[srt.Subtitle]:
     return list(srt.parse(filedata))
 
 
-def write_srt(filepath: str, subs: list[srt.Subtitle]):
+def write_srt(filepath: str, subs: List[srt.Subtitle]):
     """Write an SRT subtitle file to disk."""
     with open(filepath, "w") as f:
         f.write(srt.compose(subs))
 
 
-def whisper_result_to_srt(segments: list[dict]) -> list[srt.Subtitle]:
+def whisper_result_to_srt(segments: List[dict]) -> list[srt.Subtitle]:
     """Convert Whisper ASR result segments to a list of srt.Subtitle items."""
     subs = []
 
@@ -30,7 +30,7 @@ def whisper_result_to_srt(segments: list[dict]) -> list[srt.Subtitle]:
     return subs
 
 
-def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: int = 1) -> list[srt.Subtitle]:
+def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: int = 1) -> List[srt.Subtitle]:
     """If the subtitle length is > target_chars, split it into a list of subtitles within the same
     time span. If not, return the subtitle as is. The time code is adjusted proportionally
     to the length of the subtitle.
