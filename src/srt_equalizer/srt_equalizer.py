@@ -17,7 +17,7 @@ def write_srt(filepath: str, subs: List[srt.Subtitle]):
         f.write(srt.compose(subs))
 
 
-def whisper_result_to_srt(segments: List[dict]) -> list[srt.Subtitle]:
+def whisper_result_to_srt(segments: List[dict]) -> List[srt.Subtitle]:
     """Convert Whisper ASR result segments to a list of srt.Subtitle items."""
     subs = []
 
