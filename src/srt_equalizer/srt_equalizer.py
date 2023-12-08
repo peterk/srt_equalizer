@@ -2,6 +2,7 @@ from datetime import timedelta
 import srt
 from typing import List
 
+
 def load_srt(filepath: str) -> List[srt.Subtitle]:
     """Load an SRT subtitle file and return an array of srt.Subtitle items."""
     filedata = ""
@@ -25,7 +26,8 @@ def whisper_result_to_srt(segments: List[dict]) -> List[srt.Subtitle]:
         start_time = timedelta(seconds=int(segment['start']))
         end_time = timedelta(seconds=int(segment['end']))
         content = segment['text']
-        subs.append(srt.Subtitle(index=i, content=content, start=start_time, end=end_time))
+        subs.append(srt.Subtitle(index=i, content=content,
+                    start=start_time, end=end_time))
 
     return subs
 
@@ -51,20 +53,20 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: 
         return [sub]
 
     if method == "greedy":
-      text_chunks = []
-      current_chunk = ""
-      words = sub.content.split()
-      for word in words:
-          if len(current_chunk) + len(word) + 1 > target_chars:
-              text_chunks.append(current_chunk.strip())
-              current_chunk = word + ' '
-          else:
-              current_chunk += word + ' '
-      if current_chunk:
-          text_chunks.append(current_chunk.strip())
+        text_chunks = []
+        current_chunk = ""
+        words = sub.content.split()
+        for word in words:
+            if len(current_chunk) + len(word) + 1 > target_chars:
+                text_chunks.append(current_chunk.strip())
+                current_chunk = word + ' '
+            else:
+                current_chunk += word + ' '
+        if current_chunk:
+            text_chunks.append(current_chunk.strip())
     else:
-      assert method == "halving"
-      text_chunks = split_at_half(sub.content, target_chars)
+        assert method == "halving"
+        text_chunks = split_at_half(sub.content, target_chars)
 
     # Create a new subtitle item for each text chunk, proportional to its length.
     split_subs = []
@@ -106,32 +108,34 @@ def equalize_srt_file(srt_path: str, output_srt_path: str, target_chars: int, me
     # Limit each subtitle to a maximum character length, splitting into
     # multiple subtitle items if necessary.
     for sub in subs:
-        new_subs = split_subtitle(sub=sub, target_chars=target_chars, start_from_index=last_index, method=method)
+        new_subs = split_subtitle(
+            sub=sub, target_chars=target_chars, start_from_index=last_index, method=method)
         last_index = new_subs[-1].index
         adjusted_subs.extend(new_subs)
 
     # Write the result to a new file
     write_srt(filepath=output_srt_path, subs=adjusted_subs)
 
+
 def split_at_half(sentence, target_chars):
-  if len(sentence) <= target_chars or ' ' not in sentence:
-    return [sentence]
+    if len(sentence) <= target_chars or ' ' not in sentence:
+        return [sentence]
 
-  # find the central space
-  center = len(sentence) // 2
-  space_indices = []
-  for ix, char in enumerate(sentence):
-    if char == ' ':
-      distance_to_center = abs(ix-center)
-      if distance_to_center < target_chars / 4 and ix > 0 and sentence[ix-1] == ',':
-        distance_to_center /= 10  # boost splitting on commas that are not exacly in the middle, but close to
+    # find the central space
+    center = len(sentence) // 2
+    space_indices = []
+    for ix, char in enumerate(sentence):
+        if char == ' ':
+            distance_to_center = abs(ix-center)
+            if distance_to_center < target_chars / 4 and ix > 0 and sentence[ix-1] == ',':
+                # boost splitting on commas that are not exacly in the middle, but close to
+                distance_to_center /= 10
 
-      space_indices.append((ix, distance_to_center))
+            space_indices.append((ix, distance_to_center))
 
-  closest_space_to_center = sorted(space_indices, key=lambda x: x[1])[0][0]
+    closest_space_to_center = sorted(space_indices, key=lambda x: x[1])[0][0]
 
-  # recursively call this function until the length is bellow limit
-  left = sentence[:closest_space_to_center]
-  right = sentence[closest_space_to_center+1:]
-  return split_at_half(left, target_chars) + split_at_half(right, target_chars)
-
+    # recursively call this function until the length is bellow limit
+    left = sentence[:closest_space_to_center]
+    right = sentence[closest_space_to_center+1:]
+    return split_at_half(left, target_chars) + split_at_half(right, target_chars)

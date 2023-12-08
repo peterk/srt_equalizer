@@ -18,10 +18,10 @@ def test_load_srt_file_not_found():
 
 def test_split_subtitle():
     """Test split subtitle."""
-    sub = srt.Subtitle(index = 1,
-                       start = datetime.timedelta(seconds=0, milliseconds=0),
-                       end = datetime.timedelta(seconds=1, milliseconds=0),
-                       content = "A string with more than 40 characters that should be split into several smaller ones.")
+    sub = srt.Subtitle(index=1,
+                       start=datetime.timedelta(seconds=0, milliseconds=0),
+                       end=datetime.timedelta(seconds=1, milliseconds=0),
+                       content="A string with more than 40 characters that should be split into several smaller ones.")
     s = split_subtitle(sub, 42)
 
     # check that the line is split after "characters"
@@ -39,10 +39,10 @@ def test_split_subtitle():
 
 def test_split_subtitle_halving():
     """Test split subtitle."""
-    sub = srt.Subtitle(index = 1,
-                       start = datetime.timedelta(seconds=0, milliseconds=0),
-                       end = datetime.timedelta(seconds=1, milliseconds=0),
-                       content = "A string with more than 40 characters that should be split into several smaller ones.")
+    sub = srt.Subtitle(index=1,
+                       start=datetime.timedelta(seconds=0, milliseconds=0),
+                       end=datetime.timedelta(seconds=1, milliseconds=0),
+                       content="A string with more than 40 characters that should be split into several smaller ones.")
     s = split_subtitle(sub, 42, method='halving')
 
     reconstructed = ' '.join([x.content for x in s])
