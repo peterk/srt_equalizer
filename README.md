@@ -11,7 +11,7 @@ This library works for all languages where spaces separate words.
 
 ## Example
 
-If the SRT file contains lines over a certain length like this:
+An SRT file containing lines over a certain length can be adjusted to a maximum line length for better readability on screen.
 
 ```
 1
@@ -23,7 +23,7 @@ Good evening. I appreciate you giving me a few minutes of your time tonight
 so I can discuss with you a complex and difficult issue, an issue that is one of the most profound of our time.
 ```
 
-Using this code to shorten the subtitles to a maximum length of 42 chars:
+To adjust line length to a maximum length of 42 chars you can use SRT equalizer like this:
 
 ```python
 
@@ -62,6 +62,7 @@ the most profound of our time.
 By default, this script uses greedy algorithm which splits the text at the rightmost possible space.
 
 An alternative splitting algorithm can be used that will split longer lines at half instead of always trying to use maximum line length. This prevents producing lines with isolated word remainders.
+
 ```python
 
 from srt_equalizer import srt_equalizer
@@ -70,7 +71,7 @@ srt_equalizer.equalize_srt_file("test.srt", "shortened.srt", 42, method='halving
 ```
 
 ## Adjust Whisper subtitle lengths
-Is is also possible to work with the subtitle items with the following utility methods:
+Is is also possible to work with subtitle items produced from [Whisper](https://github.com/openai/whisper) with the following utility methods:
 
 ```python
 split_subtitle(sub: srt.Subtitle, target_chars: int=42, start_from_index: int=1) -> list[srt.Subtitle]:
