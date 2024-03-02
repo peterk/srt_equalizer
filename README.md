@@ -106,4 +106,12 @@ for i in equalized:
 
 This library is built with [Poetry](https://python-poetry.org). Checkout this repo and run `poetry install` in the source folder. To run tests use `poetry run pytest tests`.
 
+To build a new release, create a new tag, build it and publish to pypi:
+```
+poetry run pytest tests
+git tag v0.1.2
+poetry build
+poetry publish
+```
+
 If you want to explore the library start a `poetry shell`.
