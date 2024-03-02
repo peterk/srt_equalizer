@@ -1,7 +1,9 @@
-from srt_equalizer.srt_equalizer import *
+import datetime
+import pickle
+
 import pytest
 import srt
-import datetime
+from srt_equalizer.srt_equalizer import *
 
 
 def test_load_srt():
@@ -53,3 +55,20 @@ def test_split_subtitle_halving():
 
     # check fragment timing
     assert s[1].end == sub.end
+
+
+def test_whisper_result_to_srt():
+    """Test conversion of whisper result timecoded subtitles to srt items."""
+
+    # Load example whipser result from pickle
+    whisper_result = dict()
+
+    with open("tests/whisper_result_example.pkl", 'rb') as file:
+        whisper_result = pickle.load(file)
+
+    # check that fractional seconds are converted correctly
+    segments = whisper_result["segments"]
+    subs = whisper_result_to_srt(segments)
+
+    assert subs[0].start == datetime.timedelta(microseconds=123000)
+    assert subs[0].end == datetime.timedelta(seconds=10, microseconds=789000)

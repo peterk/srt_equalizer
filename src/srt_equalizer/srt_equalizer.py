@@ -1,6 +1,7 @@
 from datetime import timedelta
-import srt
 from typing import List
+
+import srt
 
 
 def load_srt(filepath: str) -> List[srt.Subtitle]:
@@ -23,8 +24,8 @@ def whisper_result_to_srt(segments: List[dict]) -> List[srt.Subtitle]:
     subs = []
 
     for i, segment in enumerate(segments, start=1):
-        start_time = timedelta(seconds=int(segment['start']))
-        end_time = timedelta(seconds=int(segment['end']))
+        start_time = timedelta(seconds=float(segment['start']))
+        end_time = timedelta(seconds=float(segment['end']))        
         content = segment['text']
         subs.append(srt.Subtitle(index=i, content=content,
                     start=start_time, end=end_time))
