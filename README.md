@@ -1,3 +1,5 @@
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/peterk/srt_equalizer/badge)](https://securityscorecards.dev/viewer/?uri=github.com/peterk/srt_equalizer)
+
 # SRT Equalizer
 
 A Python module to transform subtitle line lengths, splitting into multiple subtitle
