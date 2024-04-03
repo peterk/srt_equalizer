@@ -1,4 +1,5 @@
-[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/peterk/srt_equalizer/badge)](https://securityscorecards.dev/viewer/?uri=github.com/peterk/srt_equalizer)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/peterk/srt_equalizer/badge)](https://securityscorecards.dev/viewer/?uri=github.com/peterk/srt_equalizer) ![PyPI - Downloads](https://img.shields.io/pypi/dm/srt_equalizer)
+
 
 # SRT Equalizer
 
