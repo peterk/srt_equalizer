@@ -20,10 +20,12 @@ def test_load_srt_file_not_found():
 
 def test_split_subtitle():
     """Test split subtitle."""
-    sub = srt.Subtitle(index=1,
-                       start=datetime.timedelta(seconds=0, milliseconds=0),
-                       end=datetime.timedelta(seconds=1, milliseconds=0),
-                       content="A string with more than 40 characters that should be split into several smaller ones.")
+    sub = srt.Subtitle(
+        index=1,
+        start=datetime.timedelta(seconds=0, milliseconds=0),
+        end=datetime.timedelta(seconds=1, milliseconds=0),
+        content="A string with more than 40 characters that should be split into several smaller ones.",
+    )
     s = split_subtitle(sub, 42)
 
     # check that the line is split after "characters"
@@ -41,13 +43,15 @@ def test_split_subtitle():
 
 def test_split_subtitle_halving():
     """Test split subtitle."""
-    sub = srt.Subtitle(index=1,
-                       start=datetime.timedelta(seconds=0, milliseconds=0),
-                       end=datetime.timedelta(seconds=1, milliseconds=0),
-                       content="A string with more than 40 characters that should be split into several smaller ones.")
-    s = split_subtitle(sub, 42, method='halving')
+    sub = srt.Subtitle(
+        index=1,
+        start=datetime.timedelta(seconds=0, milliseconds=0),
+        end=datetime.timedelta(seconds=1, milliseconds=0),
+        content="A string with more than 40 characters that should be split into several smaller ones.",
+    )
+    s = split_subtitle(sub, 42, method="halving")
 
-    reconstructed = ' '.join([x.content for x in s])
+    reconstructed = " ".join([x.content for x in s])
     assert sub.content == reconstructed
 
     assert s[0].content == "A string with more than 40 characters that"
@@ -63,7 +67,7 @@ def test_whisper_result_to_srt():
     # Load example whipser result from pickle
     whisper_result = dict()
 
-    with open("tests/whisper_result_example.pkl", 'rb') as file:
+    with open("tests/whisper_result_example.pkl", "rb") as file:
         whisper_result = pickle.load(file)
 
     # check that fractional seconds are converted correctly
@@ -72,3 +76,24 @@ def test_whisper_result_to_srt():
 
     assert subs[0].start == datetime.timedelta(microseconds=123000)
     assert subs[0].end == datetime.timedelta(seconds=10, microseconds=789000)
+
+
+def test_split_subtitle_punctuation():
+    """Test split subtitle."""
+    sub = srt.Subtitle(
+        index=1,
+        start=datetime.timedelta(seconds=0, milliseconds=0),
+        end=datetime.timedelta(seconds=1, milliseconds=0),
+        content="A string with more than 40 characters! This should be split into several, smaller ones.",
+    )
+    s = split_subtitle(sub, 42, method="punctuation")
+
+    reconstructed = " ".join([x.content for x in s])
+    assert sub.content == reconstructed
+
+    assert s[0].content == "A string with more than 40 characters!"
+    assert s[1].content == "This should be split into several,"
+    assert s[2].content == "smaller ones."
+
+    # check fragment timing
+    assert s[2].end == sub.end
