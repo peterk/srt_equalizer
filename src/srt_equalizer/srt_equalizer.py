@@ -43,7 +43,7 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: 
         sub: A srt.Subtitle object.
         target_chars: The max number of characters for a subtitle line.
         start_from_index: The start index of the subtitle item.
-        method: algorithm for splitting - either "greedy", "halving" or "puctuation".
+        method: algorithm for splitting - either "greedy" (default), "halving" or "punctuation".
 
     Returns:
         An array of one or more subtitle items.
@@ -93,7 +93,7 @@ def split_subtitle(sub: srt.Subtitle, target_chars: int = 42, start_from_index: 
 def equalize_srt_file(srt_path: str, output_srt_path: str, target_chars: int, method='greedy'):
     """Load subs from an SRT file and output equalized subtitles to a new SRT file.
     """
-    assert method in {'greedy', 'halving'}, method
+    assert method in {'greedy', 'halving', 'punctuation'}, method
     subs = load_srt(srt_path)
 
     adjusted_subs = []
@@ -110,7 +110,11 @@ def equalize_srt_file(srt_path: str, output_srt_path: str, target_chars: int, me
     # Write the result to a new file
     write_srt(filepath=output_srt_path, subs=adjusted_subs)
 
+
 def split_greedy(sentance: str, target_chars: int) -> List[srt.Subtitle]:
+    """Split subtitles into chunks of target_chars length as soon as possible.
+    """
+
     text_chunks = []
     current_chunk = ''
     words = sentance.split()
@@ -127,6 +131,8 @@ def split_greedy(sentance: str, target_chars: int) -> List[srt.Subtitle]:
 
 
 def split_at_half(sentence, target_chars):
+    """Try to split subtitles into similar line lengths takign commas into account."""
+
     if len(sentence) <= target_chars or ' ' not in sentence:
         return [sentence]
 
@@ -151,6 +157,8 @@ def split_at_half(sentence, target_chars):
 
 
 def split_by_punctuation(sentance: str, target_chars: int) -> List[str]:
+    """Split subtitles into chunks of target_chars length by punctuation."""
+
     if len(sentance) <= target_chars:
         return [sentance]
 

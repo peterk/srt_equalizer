@@ -62,14 +62,17 @@ the most profound of our time.
 ```
 
 ### Algorithms
-By default, this script uses greedy algorithm which splits the text at the rightmost possible space.
+By default, this script uses `greedy` algorithm which splits the text at the rightmost possible space.
 
-An alternative splitting algorithm can be used that will split longer lines at half instead of always trying to use maximum line length. This prevents producing lines with isolated word remainders.
+An alternative splitting algorithm is `halving` which will split longer lines more evenly instead of always trying to use maximum line length. This prevents producing lines with isolated word remainders.
+
+Another alternative is the `punctuation` algorithm that takes punctuation (commas, periods, etc.) into account. 
 
 ```python
 
 from srt_equalizer import srt_equalizer
 
+# use "greedy", "halving" or "punctuation" for the method parameter
 srt_equalizer.equalize_srt_file("test.srt", "shortened.srt", 42, method='halving')
 ```
 
