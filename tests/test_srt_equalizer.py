@@ -1,9 +1,25 @@
 import datetime
 import pickle
+from pathlib import Path
 
 import pytest
 import srt
 from srt_equalizer.srt_equalizer import *
+
+def test_path_validation_security():
+    """Test path validation security measures"""
+    # Test path traversal attempts
+    with pytest.raises(ValueError):
+        validate_file_path('../../etc/passwd')
+        
+    with pytest.raises(ValueError):
+        validate_file_path('/valid/path/../../etc/passwd')
+
+    # Test non-existent file handling
+    with pytest.raises(FileNotFoundError):
+        load_srt("non_existent.srt")
+    
+
 
 
 def test_load_srt():

@@ -1,22 +1,42 @@
 import re
+import os
 from datetime import timedelta
 from typing import List
 
 import srt
 
 
-def load_srt(filepath: str) -> List[srt.Subtitle]:
-    """Load an SRT subtitle file and return an array of srt.Subtitle items."""
-    filedata = ""
-    with open(filepath, 'r') as f:
-        filedata = f.read()
 
-    return list(srt.parse(filedata))
+def validate_file_path(file_path: str, must_exist: bool = False) -> str:
+    """Validate and normalize file paths to prevent directory traversal."""
+    if not file_path:
+        raise ValueError("File path cannot be empty")
+    
+    # Normalize path and convert to absolute
+    abs_path = os.path.abspath(os.path.normpath(file_path))
+    
+    # Security check for path traversal attempts
+    if os.path.relpath(abs_path).startswith('..'):
+        raise ValueError(f"Invalid path traversal attempt: {file_path}")
+    
+    if must_exist and not os.path.isfile(abs_path):
+        raise FileNotFoundError(f"File does not exist: {abs_path}")
+        
+    return abs_path
+
+
+def load_srt(filepath: str) -> List[srt.Subtitle]:
+    """Load SRT file with path validation"""
+    clean_path = validate_file_path(filepath, must_exist=True)
+    with open(clean_path, 'r') as f:
+        return list(srt.parse(f.read()))
 
 
 def write_srt(filepath: str, subs: List[srt.Subtitle]):
-    """Write an SRT subtitle file to disk."""
-    with open(filepath, "w") as f:
+    """Write SRT file with path validation"""
+    clean_path = validate_file_path(filepath)
+    os.makedirs(os.path.dirname(clean_path), exist_ok=True)
+    with open(clean_path, "w") as f:
         f.write(srt.compose(subs))
 
 
