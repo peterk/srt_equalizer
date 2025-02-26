@@ -111,13 +111,13 @@ def equalize_srt_file(srt_path: str, output_srt_path: str, target_chars: int, me
     write_srt(filepath=output_srt_path, subs=adjusted_subs)
 
 
-def split_greedy(sentance: str, target_chars: int) -> List[srt.Subtitle]:
+def split_greedy(sentence: str, target_chars: int) -> List[srt.Subtitle]:
     """Split subtitles into chunks of target_chars length as soon as possible.
     """
 
     text_chunks = []
     current_chunk = ''
-    words = sentance.split()
+    words = sentence.split()
     for word in words:
         if len(current_chunk) + len(word) + 1 > target_chars:
             text_chunks.append(current_chunk.strip())
@@ -156,14 +156,14 @@ def split_at_half(sentence, target_chars):
     return split_at_half(left, target_chars) + split_at_half(right, target_chars)
 
 
-def split_by_punctuation(sentance: str, target_chars: int) -> List[str]:
+def split_by_punctuation(sentence: str, target_chars: int) -> List[str]:
     """Split subtitles into chunks of target_chars length by punctuation."""
 
-    if len(sentance) <= target_chars:
-        return [sentance]
+    if len(sentence) <= target_chars:
+        return [sentence]
 
-    # use regex to split the sentance by punctuation
-    chunks = re.split(r'([.,!?])', sentance)
+    # use regex to split the sentence by punctuation
+    chunks = re.split(r'([.,!?])', sentence)
     normalized_chunks = []
     for chunk in chunks:
         # strip whitespace
