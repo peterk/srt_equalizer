@@ -183,7 +183,7 @@ def split_by_punctuation(sentence: str, target_chars: int) -> List[str]:
         return [sentence]
 
     # use regex to split the sentence by punctuation
-    chunks = re.split(r'([.,!?])', sentence)
+    chunks = re.split(r'([.,!?]+[\'"”’]*)', sentence)
     normalized_chunks = []
     for chunk in chunks:
         # strip whitespace
@@ -198,7 +198,7 @@ def split_by_punctuation(sentence: str, target_chars: int) -> List[str]:
             continue
 
         if normalized_chunks:
-            if chunk in '.,!?':
+            if re.fullmatch(r"[.,!?]+[\'\"”’]*", chunk):
                 # add pucturation to the last chunk
                 chunk = normalized_chunks.pop() + chunk
             elif len(chunk) + len(normalized_chunks[-1]) <= target_chars:
