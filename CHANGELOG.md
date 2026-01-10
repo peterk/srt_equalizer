@@ -1,3 +1,11 @@
+## [0.1.11] - 2026-01-10
+
+### Added
+- Fix splitting on quoted text to prevent splitting next to quotes.
+
+### Acknowledgments
+- Thanks to @nicorikken for the issue report.
+
 ## [0.1.10] - 2024-08-03
 
 ### Added
