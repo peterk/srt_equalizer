@@ -57,6 +57,35 @@ def test_split_subtitle():
     assert s[2].end == sub.end
 
 
+@pytest.mark.parametrize(
+    "content,expected_punct_quote",
+    [
+        ('"Hello world!" Zangemann exclaimed and then he kept working.', '!"'),
+        ("'Hello world!' Zangemann exclaimed and then he kept working.", "!'"),
+        ("“Hello world!” Zangemann exclaimed and then he kept working.", "!”"),
+        ("‘Hello world!’ Zangemann exclaimed and then he kept working.", "!’"),
+    ],
+)
+def test_split_subtitle_punctuation_keeps_quotes_with_punctuation(content, expected_punct_quote):
+    sub = srt.Subtitle(
+        index=1,
+        start=datetime.timedelta(seconds=0, milliseconds=0),
+        end=datetime.timedelta(seconds=1, milliseconds=0),
+        content=content,
+    )
+
+    s = split_subtitle(sub, 25, method="punctuation")
+
+    reconstructed = " ".join([x.content for x in s])
+    assert sub.content == reconstructed
+
+    assert any(expected_punct_quote in x.content for x in s)
+
+    closing_quotes = {'"', "'", "”", "’"}
+    for prev, curr in zip(s, s[1:]):
+        assert not (prev.content.endswith(("!", "?", ".")) and curr.content[:1] in closing_quotes)
+
+
 def test_split_subtitle_halving():
     """Test split subtitle."""
     sub = srt.Subtitle(
