@@ -1,3 +1,8 @@
+## [0.1.12] - 2026-01-11
+
+### Added
+- Fix splitting on quoted text to prevent splitting next to quotes in German, Spanish and French.
+
 ## [0.1.11] - 2026-01-10
 
 ### Added
