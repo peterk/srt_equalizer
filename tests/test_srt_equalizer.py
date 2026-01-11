@@ -86,6 +86,51 @@ def test_split_subtitle_punctuation_keeps_quotes_with_punctuation(content, expec
         assert not (prev.content.endswith(("!", "?", ".")) and curr.content[:1] in closing_quotes)
 
 
+@pytest.mark.parametrize(
+    "content,expected_punct_quote,closing_quote",
+    [
+        # French/Spanish guillemets (closing with »)
+        ("«Bonjour le monde!» Zangemann a dit et puis il a travaillé.", "!»", "»"),
+        # Single guillemet (closing with ›)
+        ("‹Bonjour le monde!› Zangemann a dit et puis il a travaillé.", "!›", "›"),
+        # German inverted guillemets (closing with «)
+        ("»Hallo Welt!« Zangemann rief und machte sich an die Arbeit.", "!«", "«"),
+        # German single inverted guillemet (closing with ‹)
+        ("›Hallo Welt!‹ Zangemann rief und machte sich an die Arbeit.", "!‹", "‹"),
+        # German low-9 double quote (closing with ")
+        ('„Hallo Welt!" Zangemann rief und machte sich an die Arbeit.', '!"', '"'),
+        # German low-9 single quote (closing with ')
+        ("‚Hallo Welt!' Zangemann rief und machte sich an die Arbeit.", "!'", "'"),
+        # Left double curly quote used as closing (rare but possible)
+        ('«Hello world!" Zangemann exclaimed and then he kept working.', '!"', '"'),
+        # Left single curly quote used as closing (rare but possible)
+        ("‹Hello world!' Zangemann exclaimed and then he kept working.", "!'", "'"),
+    ],
+)
+def test_split_subtitle_punctuation_keeps_latin_quotes_with_punctuation(content, expected_punct_quote, closing_quote):
+    """Test that punctuation splitting handles various Latin language quotation marks."""
+    sub = srt.Subtitle(
+        index=1,
+        start=datetime.timedelta(seconds=0, milliseconds=0),
+        end=datetime.timedelta(seconds=1, milliseconds=0),
+        content=content,
+    )
+
+    s = split_subtitle(sub, 25, method="punctuation")
+
+    reconstructed = " ".join([x.content for x in s])
+    assert sub.content == reconstructed
+
+    assert any(expected_punct_quote in x.content for x in s), (
+        f"Expected '{expected_punct_quote}' to appear in one chunk, got: {[x.content for x in s]}"
+    )
+
+    for prev, curr in zip(s, s[1:]):
+        assert not (prev.content.endswith(("!", "?", ".")) and curr.content.startswith(closing_quote)), (
+            f"Split incorrectly between punctuation and closing quote: '{prev.content}' | '{curr.content}'"
+        )
+
+
 def test_split_subtitle_halving():
     """Test split subtitle."""
     sub = srt.Subtitle(

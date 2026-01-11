@@ -108,6 +108,27 @@ for i in equalized:
     print(i.content)
 ```
 
+## Quotes consideration
+
+The method "split_by_punctuation" will try to take into account punctuation (commas, periods, etc.) when splitting the text.
+
+This is to prevent trailing quotation characters when splitting text.
+
+| Character | Unicode | Description |
+|-----------|---------|-------------|
+| ' | U+0027 | ASCII apostrophe |
+| " | U+0022 | ASCII double quote |
+| " | U+201C | Left double curly quote |
+| " | U+201D | Right double curly quote |
+| ' | U+2018 | Left single curly quote |
+| ' | U+2019 | Right single curly quote |
+| „ | U+201E | Double low-9 quote (German) |
+| ‚ | U+201A | Single low-9 quote (German) |
+| « | U+00AB | Left guillemet |
+| » | U+00BB | Right guillemet |
+| ‹ | U+2039 | Single left guillemet |
+| › | U+203A | Single right guillemet |
+
 ## Contributing
 
 This library is built with [Poetry](https://python-poetry.org). Checkout this repo and run `poetry install` in the source folder. To run tests use `poetry run pytest tests`.
