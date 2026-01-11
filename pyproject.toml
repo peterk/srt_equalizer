@@ -16,6 +16,9 @@ srt = "^3.5.3"
 [tool.poetry.group.dev.dependencies]
 pytest = ">=7.2.2,<9.0.0"
 
+[tool.poetry.scripts]
+srt-equalizer = "srt_equalizer.cli:main"
+
 [build-system]
 requires = ["poetry-core>=1.0.0"]
 build-backend = "poetry.core.masonry.api"
